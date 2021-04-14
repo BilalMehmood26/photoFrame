@@ -1,81 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MyWorkSpace">
+    android:background="@drawable/canvas_bg"
+    tools:context=".Activities.EditMenu">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
 
-    <!--    <com.jsibbold.zoomage.ZoomageView
-            android:id="@+id/image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@null"
-            app:zoomage_animateOnReset="true"
-            app:zoomage_autoCenter="true"
-            app:zoomage_autoResetMode="UNDER"
-            app:zoomage_maxScale="8"
-            app:zoomage_minScale="0.6"
-            app:zoomage_restrictBounds="false"
-            app:zoomage_translatable="true"
-            app:zoomage_zoomable="true" />-->
-    <ImageView
-    android:id="@+id/framesImage"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/app_background"
-    android:scaleType="fitXY" />
-
-    <ja.burhanrashid52.photoeditor.PhotoEditorView
-        android:id="@+id/photoEditorView"
+    <RelativeLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/horizontalScrollView2">
-
-    </ja.burhanrashid52.photoeditor.PhotoEditorView>
-
-
-    <!-- <com.jsibbold.zoomage.ZoomageView
-         android:id="@+id/image"
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:background="@null"
-         app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView2"
-         app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintStart_toStartOf="parent"
-         app:layout_constraintTop_toTopOf="parent"
-         app:zoomage_animateOnReset="true"
-         app:zoomage_autoCenter="true"
-         app:zoomage_autoResetMode="UNDER"
-         app:zoomage_maxScale="8"
-         app:zoomage_minScale="0.6"
-         app:zoomage_restrictBounds="false"
-         app:zoomage_translatable="true"
-         app:zoomage_zoomable="true" />-->
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="400dp"
         android:layout_above="@+id/horizontalScrollView2"
-        android:layout_marginBottom="10dp"
-        android:scrollbars="none" />
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bottm_nav">
+        android:background="@drawable/bottm_nav"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="6dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -84,19 +46,19 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/filters"
+                    android:id="@+id/eraser"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="6dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/background_circle"
-                    android:src="@drawable/ic_baseline_movie_filter_24" />
+                    android:src="@drawable/ic_baseline_cleaning_services_24" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Filters"
+                    android:text="Eraser"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -175,4 +137,4 @@
             </LinearLayout>
         </LinearLayout>
     </HorizontalScrollView>
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

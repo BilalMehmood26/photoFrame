@@ -3,6 +3,7 @@ package com.example.naturephotoframe.Activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -21,6 +22,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -46,7 +48,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton camera, gallery;
+    ImageView camera, gallery, myWork;
     final static int Result_Gallery_Request_Code = 1;
     final static int Result_Camera_Request_Code = 2;
     final int PIC_CROP = 1;
@@ -58,16 +60,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hooks();
-
         gallery.setOnClickListener(v -> openGallery());
         camera.setOnClickListener(v -> cameraPermissions());
-
+        myWork.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, MyWork.class)));
 
     }
 
     public void hooks() {
         camera = findViewById(R.id.camera_btn);
         gallery = findViewById(R.id.gallery);
+        myWork = findViewById(R.id.myWork);
 
     }
 
@@ -115,13 +117,14 @@ public class MainActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 Common.imageUri = result.getUri();
+
                 try {
                     Common.cameraBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Common.imageUri);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                Intent intent  = new Intent(MainActivity.this,MyWorkSpace.class);
+                Intent intent = new Intent(MainActivity.this, EditMenu.class);
                 startActivity(intent);
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
@@ -149,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .start(this);
     }
+
     /*
      * saves image to camera gallery
      * */

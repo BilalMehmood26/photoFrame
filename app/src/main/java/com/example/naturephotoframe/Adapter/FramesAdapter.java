@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.naturephotoframe.Activities.MyWorkSpace;
 import com.example.naturephotoframe.Model.Frames;
 import com.example.naturephotoframe.R;
 
@@ -51,10 +52,9 @@ public class FramesAdapter extends RecyclerView.Adapter<FramesAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 image  = frames.getFrames();
+                MyWorkSpace.framesImage.setImageResource(image);
                 selectedIndex = position;
                 notifyDataSetChanged();
-                Log.i("imageViewFrame", "onClick: " + image +" posi" + position);
-                Toast.makeText(context.getApplicationContext(), "Clicked", Toast.LENGTH_SHORT).show();
             }
         });
         if(selectedIndex == position)
