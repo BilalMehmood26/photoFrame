@@ -2,9 +2,11 @@ package com.example.naturephotoframe.Activities;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,8 +14,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.WorkSource;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -35,6 +39,7 @@ import com.divyanshu.colorseekbar.ColorSeekBar;
 import com.example.naturephotoframe.Adapter.FiltersAdapter;
 import com.example.naturephotoframe.Adapter.FramesAdapter;
 import com.example.naturephotoframe.Adapter.StickerAdapter;
+import com.example.naturephotoframe.BackgrounEraser.TryonView;
 import com.example.naturephotoframe.Model.Frames;
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
@@ -45,6 +50,10 @@ import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.utils.ThumbnailItem;
 import com.zomato.photofilters.utils.ThumbnailsManager;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,8 +67,13 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
 
     public static PhotoEditorView mImage;
     //ZoomageView zoomableImage;
+    private String imagePath;
+    private Intent intent;
     RecyclerView recyclerView;
     public ImageView mainPic;
+    private ContentResolver mContentResolver;
+    private Bitmap headBitmap;
+    private Bitmap bodyBitmap;
     public static ImageView framesImage;
     ImageButton filterBtn, stickers, background, text;
     List<ThumbnailItem> thumbnailItemList;
@@ -67,6 +81,11 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     MyWorkSpaceListener myWorkSpaceListener;
     static String IMAGE_NAME = "placeholder.jpg";
     Bitmap originalImage;
+    int viewWidth;
+    int viewheight;
+
+    ImageView bodyImageView;
+    TryonView mTryOnView;
     Bitmap filteredImage;
     int localColor = R.color.teal_200;
     Bitmap finalImage;
@@ -87,19 +106,25 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_work_space);
         hooks();
+        mContentResolver = getContentResolver();
+        intent = getIntent();
+        imagePath = intent.getStringExtra("imagePath");
+        Log.i("headBitmap", "onCreate: " + imagePath);
+        headBitmap = getBitmap(imagePath, viewWidth * 2 / 3);
         loadImage();
+
+
         frameList.add(new Frames(R.drawable.frame1));
         frameList.add(new Frames(R.drawable.frame13));
 
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
 
-        backgroundList.add(new Frames(R.drawable.background));
-        backgroundList.add(new Frames(R.drawable.placeholder));
+        bgList();
+        stickerList();
 
         mPhotoEditor = new PhotoEditor.Builder(this, mImage)
                 .setPinchTextScalable(true)
                 .build();
+
 
         filterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,6 +151,8 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
                 showDialog();
             }
         });
+
+        mPhotoEditor.addImage(Common.cameraBitmap);
 
     }
 
@@ -208,7 +235,7 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
                 ((TextView) adapterView.getChildAt(0)).setTextColor(getResources().getColor(R.color.black));
                 colorposition[0] = i;
                 etxt.setTypeface(Typeface.createFromAsset(MyWorkSpace.this.getAssets(), styles[colorposition[0]]));
-                mPhotoEditor.addText(Typeface.createFromAsset(MyWorkSpace.this.getAssets(), styles[colorposition[0]]),etxt.getText().toString(),localColor);
+                mPhotoEditor.addText(Typeface.createFromAsset(MyWorkSpace.this.getAssets(), styles[colorposition[0]]), etxt.getText().toString(), localColor);
             }
 
             @Override
@@ -220,11 +247,116 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
 
     }
 
+    public void stickerList() {
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker1));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.sticker11));
+    }
+
+    public void bgList() {
+        backgroundList.add(new Frames(R.drawable.bg_one));
+        backgroundList.add(new Frames(R.drawable.bg_two));
+        backgroundList.add(new Frames(R.drawable.bg_three));
+        backgroundList.add(new Frames(R.drawable.bg_four));
+        backgroundList.add(new Frames(R.drawable.bg_five));
+        backgroundList.add(new Frames(R.drawable.bg_six));
+        backgroundList.add(new Frames(R.drawable.bg_seven));
+        backgroundList.add(new Frames(R.drawable.bg_eight));
+        backgroundList.add(new Frames(R.drawable.bg_nine));
+        backgroundList.add(new Frames(R.drawable.bg_ten));
+        backgroundList.add(new Frames(R.drawable.bg_eleven));
+        backgroundList.add(new Frames(R.drawable.bg_teweleve));
+        backgroundList.add(new Frames(R.drawable.bg_thirteen));
+        backgroundList.add(new Frames(R.drawable.bg_fourteen));
+        backgroundList.add(new Frames(R.drawable.bg_fifteen));
+        backgroundList.add(new Frames(R.drawable.bg_sixteen));
+        backgroundList.add(new Frames(R.drawable.bg_seventeen));
+        backgroundList.add(new Frames(R.drawable.bg_eighteen));
+        backgroundList.add(new Frames(R.drawable.bg_ninteen));
+        backgroundList.add(new Frames(R.drawable.bg_twenty));
+        backgroundList.add(new Frames(R.drawable.bg_twentyone));
+        backgroundList.add(new Frames(R.drawable.bg_twenty_two));
+        backgroundList.add(new Frames(R.drawable.bg_twenty_three));
+        backgroundList.add(new Frames(R.drawable.bg_twenty_four));
+        backgroundList.add(new Frames(R.drawable.bg_twenty_five));
+    }
+
     private void stikersRecyclerView() {
-        stickerAdapter = new StickerAdapter(stickersList,getApplicationContext());
+        stickerAdapter = new StickerAdapter(stickersList, getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(stickerAdapter);
+    }
+
+    private Uri getImageUri(String path) {
+        return Uri.fromFile(new File(path));
+    }
+
+    private Bitmap getBitmap(String path, int maxWidth) {
+        Uri uri = getImageUri(path);
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = maxWidth;
+            in = mContentResolver.openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+            int scale = 1;
+            if (o.outHeight > IMAGE_MAX_SIZE || o.outWidth > IMAGE_MAX_SIZE) {
+                scale = (int) Math.pow(2, (int) Math
+                        .round(Math.log(IMAGE_MAX_SIZE / (double) Math.max(o.outHeight, o.outWidth)) / Math.log(0.5)));
+            }
+
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            in = mContentResolver.openInputStream(uri);
+            Bitmap b = BitmapFactory.decodeStream(in, null, o2);
+            in.close();
+
+            return b;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void hooks() {
@@ -242,7 +374,8 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
         originalImage = BitmapUtils.getBitmapFromAssets(this, IMAGE_NAME, 300, 300);
         filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
         finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-        mImage.getSource().setImageBitmap( Common.cameraBitmap);
+        mImage.getSource().setImageBitmap(headBitmap);
+
     }
 
 
@@ -260,7 +393,7 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(filtersAdapter);
-        prepareThumbnail(Common.cameraBitmap);
+        prepareThumbnail(headBitmap);
 
     }
 
