@@ -37,4 +37,16 @@
             android:layout_marginRight="12dp"
             android:src="@drawable/checked" />
     </RelativeLayout>
+    <!--recyclerview-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridrecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:layout_editor_absoluteX="15dp"
+        tools:listitem="@layout/your_workitem"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

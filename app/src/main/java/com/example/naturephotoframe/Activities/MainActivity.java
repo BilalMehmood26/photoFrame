@@ -22,20 +22,35 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
 import com.example.naturephotoframe.Utils.Common;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.nativead.MediaView;
+import com.google.android.gms.ads.nativead.NativeAd;
+import com.google.android.gms.ads.nativead.NativeAdOptions;
+import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.onesignal.OneSignal;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -45,6 +60,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.naturephotoframe.Utils.FCM.ONESIGNAL_APP_ID;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,14 +69,31 @@ public class MainActivity extends AppCompatActivity {
     final static int Result_Gallery_Request_Code = 1;
     final static int Result_Camera_Request_Code = 2;
     final int PIC_CROP = 1;
+    TextView  text;
+    ProgressBar progressBar;
+
 
     String currentPhotoPath;
+    private NativeAd nativeAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //one signal
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
+        //one signal
+
         hooks();
+        Load_Admobe_Native();
+
+
         gallery.setOnClickListener(v -> openGallery());
         camera.setOnClickListener(v -> cameraPermissions());
         myWork.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, MyWork.class)));
@@ -70,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         camera = findViewById(R.id.camera_btn);
         gallery = findViewById(R.id.gallery);
         myWork = findViewById(R.id.myWork);
+        text=findViewById(R.id.text);
+        progressBar=findViewById(R.id.prograssbar);
 
     }
 
@@ -199,5 +235,116 @@ public class MainActivity extends AppCompatActivity {
         intent.setDataAndType(Uri.parse(path), "image/*");
         startActivity(intent);
     }
+
+
+
+    private void Load_Admobe_Native() {
+        AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.ADMOB_ADS_UNIT_ID));
+        builder.forNativeAd(new NativeAd.OnNativeAdLoadedListener() {
+            @Override
+            public void onNativeAdLoaded(NativeAd mNativeAd) {
+                Log.d("MyKeyADs", "Loaded function Native Admobe Splash");
+                nativeAd = mNativeAd;
+                FrameLayout frameLayout = findViewById(R.id.fl_adplaceholder);
+                NativeAdView adView = (NativeAdView) getLayoutInflater().inflate(R.layout.ad_unified_small, null);
+                populateUnifiedNativeAdView(mNativeAd, adView);
+                frameLayout.removeAllViews();
+                frameLayout.addView(adView);
+            }
+        });
+        NativeAdOptions adOptions = new NativeAdOptions.Builder().build();
+        builder.withNativeAdOptions(adOptions);
+        AdLoader adLoader = builder.withAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.d("MyKeyADs", "Loaded Native Admobe Splash");
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.d("MyKeyADs", "Failed Native Admobe Splash");
+            }
+        }).build();
+        text.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
+    private void populateUnifiedNativeAdView(NativeAd nativeAd, NativeAdView adView) {
+        Log.d("MyKeyADs", "Populate Native Admobe Splash");
+        adView.setMediaView((MediaView) adView.findViewById(R.id.ad_media));
+        adView.setHeadlineView(adView.findViewById(R.id.ad_headline));
+        adView.setBodyView(adView.findViewById(R.id.ad_body));
+        adView.setCallToActionView(adView.findViewById(R.id.ad_call_to_action));
+        adView.setIconView(adView.findViewById(R.id.ad_app_icon));
+        adView.setPriceView(adView.findViewById(R.id.ad_price));
+        adView.setAdvertiserView(adView.findViewById(R.id.ad_advertiser));
+        adView.setStoreView(adView.findViewById(R.id.ad_store));
+        adView.setStarRatingView(adView.findViewById(R.id.ad_stars));
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+        adView.getMediaView().setMediaContent(nativeAd.getMediaContent());
+        if (nativeAd.getBody() == null) {
+            adView.getBodyView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getBodyView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getBodyView()).setText(nativeAd.getBody());
+        }
+        if (nativeAd.getCallToAction() == null) {
+            adView.getCallToActionView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getCallToActionView().setVisibility(View.VISIBLE);
+            ((Button) adView.getCallToActionView()).setText(nativeAd.getCallToAction());
+        }
+        if (nativeAd.getIcon() == null) {
+            adView.getIconView().setVisibility(View.GONE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+        if (nativeAd.getPrice() == null) {
+            adView.getPriceView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getPriceView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getPriceView()).setText(nativeAd.getPrice());
+        }
+        if (nativeAd.getStore() == null) {
+            adView.getStoreView().setVisibility(View.INVISIBLE);
+        } else {
+            adView.getStoreView().setVisibility(View.VISIBLE);
+            ((TextView) adView.getStoreView()).setText(nativeAd.getStore());
+        }
+        if (nativeAd.getStarRating() == null) {
+            adView.getStarRatingView().setVisibility(View.INVISIBLE);
+        } else {
+            ((RatingBar) adView.getStarRatingView()).setRating(nativeAd.getStarRating().floatValue());
+            adView.getStarRatingView().setVisibility(View.VISIBLE);
+        }
+        if (nativeAd.getAdvertiser() == null) {
+            adView.getAdvertiserView().setVisibility(View.INVISIBLE);
+        } else {
+            ((TextView) adView.getAdvertiserView()).setText(nativeAd.getAdvertiser());
+            adView.getAdvertiserView().setVisibility(View.VISIBLE);
+        }
+        adView.setNativeAd(nativeAd);
+        // Get the video controller for the ad. One will always be provided, even if the ad doesn't
+        // have a video asset.
+        VideoController vc = nativeAd.getMediaContent().getVideoController();
+        // Updates the UI to say whether or not this ad has a video asset.
+        if (vc.hasVideoContent()) {
+            // Create a new VideoLifecycleCallbacks object and pass it to the VideoController. The
+            // VideoController will call methods on this object when events occur in the video
+            // lifecycle.
+            vc.setVideoLifecycleCallbacks(new VideoController.VideoLifecycleCallbacks() {
+                @Override
+                public void onVideoEnd() {
+                    super.onVideoEnd();
+                }
+            });
+
+
+        }
+    }
+
 
 }

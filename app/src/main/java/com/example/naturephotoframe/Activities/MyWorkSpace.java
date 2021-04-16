@@ -173,7 +173,9 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
                     @Override
                     public void run() {
                         rootLayout.setDrawingCacheEnabled(true);
+                        //final bitmap
                         finalBitmap =Bitmap.createBitmap(rootLayout.getDrawingCache());
+                        saveToGallery(finalBitmap);
                         rootLayout.setDrawingCacheEnabled(false);
                         BitmapUtils.insertImage(getContentResolver(),finalBitmap,"Image","");
                         saveImage.setEnabled(true);
@@ -556,4 +558,38 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     public interface MyWorkSpaceListener {
         void onFilterSelected(Filter filter);
     }
+
+
+
+    public void saveToGallery(Bitmap b) {
+        FileOutputStream fileOutputStream = null;
+        File sdcard = Environment.getExternalStorageDirectory();
+        File directory = new File(sdcard.getAbsolutePath() + "/NaturePhotoFrame");
+        directory.mkdir();
+
+        String filename = String.format("%d.jpg", System.currentTimeMillis());
+        File outfile = new File(directory, filename);
+
+        Toast.makeText(this, "Image Saved successfully..", Toast.LENGTH_SHORT).show();
+
+        try {
+            fileOutputStream = new FileOutputStream(outfile);
+            b.compress(Bitmap.CompressFormat.JPEG
+                    , 100, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            intent.setData(Uri.fromFile(outfile));
+            sendBroadcast(intent);
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

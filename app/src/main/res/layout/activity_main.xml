@@ -8,6 +8,39 @@
     tools:context=".Activities.MainActivity">
 
 
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/fl_adplaceholder"
+        android:background="@color/white"
+        android:layout_margin="1dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ad is loading..."
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:layout_gravity="center"
+            android:id="@+id/text"
+            />
+
+        <ProgressBar
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"
+            android:id="@+id/prograssbar"/>
+
+    </FrameLayout>
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
@@ -107,7 +140,6 @@
                 android:textStyle="bold" />
         </RelativeLayout>
     </LinearLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"

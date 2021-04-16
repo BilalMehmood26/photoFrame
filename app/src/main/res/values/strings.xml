@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="filter_normal">Normal Filter</string>
+    <string name="ADMOB_ADS_UNIT_ID">ca-app-pub-3940256099942544/2247696110</string>
+    <string name="ad_attribution">Ad</string>
 </resources>
