@@ -40,8 +40,8 @@
         android:id="@+id/privacyPolicy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Privacy Policy."
         android:paddingBottom="10dp"
+        android:text="Privacy Policy."
         android:textColor="@color/light_green"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView2"
@@ -84,8 +84,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.33"
         app:layout_constraintStart_toEndOf="@+id/agree"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="@+id/agree" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="350dp"
@@ -99,12 +99,12 @@
         app:layout_constraintVertical_bias="0.86">
 
         <TextView
+            android:id="@+id/loadingtxt2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Ad is Loading..."
-            android:textColor="@color/black"
-            android:id="@+id/loadingtxt2"/>
+            android:textColor="@color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"

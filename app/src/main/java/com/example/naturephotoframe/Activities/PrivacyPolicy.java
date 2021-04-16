@@ -24,7 +24,7 @@ public class PrivacyPolicy extends AppCompatActivity {
         agreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PrivacyPolicy.this, MainActivity.class));
+                startActivity(new Intent(PrivacyPolicy.this, InAppPurchase.class));
                 finish();
             }
         });
