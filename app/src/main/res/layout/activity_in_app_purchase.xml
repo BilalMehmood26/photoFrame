@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/in_app_background"
+tools:context=".Activities.InAppPurchase">
+
+<TextView
+    android:id="@+id/text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:text="Get PRO Version"
+    android:textColor="@color/light_green"
+    android:textSize="26sp"
+    android:textStyle="bold"
+    android:layout_marginTop="15dp"
+    app:layout_constraintEnd_toEndOf="@+id/rocket"
+    app:layout_constraintStart_toStartOf="@+id/rocket"
+    app:layout_constraintTop_toBottomOf="@+id/rocket" />
+
+<TextView
+    android:id="@+id/description"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:text=""
+    android:textAlignment="center"
+    android:textColor="#F8EDED"
+    android:layout_marginTop="6dp"
+    app:layout_constraintEnd_toEndOf="@+id/text"
+    app:layout_constraintStart_toStartOf="@+id/text"
+    app:layout_constraintTop_toBottomOf="@+id/text" />
+
+<ImageView
+    android:id="@+id/rocket"
+    android:layout_width="180dp"
+    android:layout_height="180dp"
+    android:layout_centerHorizontal="true"
+    android:src="@drawable/in_app_icon"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.050000012" />
+
+<ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toTopOf="@+id/continue_with_ads"
+    app:layout_constraintEnd_toEndOf="parent"
+    android:padding="20dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/description">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/weekly_card_view"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_to_bottom_gradient"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Weekly"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="$1.49"
+                android:textAllCaps="true"
+                android:textColor="@color/light_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/monthly_card_view"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/weekly_card_view"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/top_to_bottom_gradient"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="1 Month"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="$3.99"
+                android:textAllCaps="true"
+                android:textColor="@color/light_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/three_months_card_view"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/monthly_card_view"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/top_to_bottom_gradient"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="3 Months"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="$7.99"
+                android:textAllCaps="true"
+
+                android:textColor="@color/light_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/six_months_card_view"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/three_months_card_view"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/top_to_bottom_gradient"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="6 Months"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="$12.99"
+                android:textAllCaps="true"
+
+                android:textColor="@color/light_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/life_time_card_view"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/top_to_bottom_gradient"
+            android:padding="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Life Time"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:text="$19.99"
+                android:textAllCaps="true"
+
+                android:textColor="@color/light_green"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</ScrollView>
+
+<TextView
+    android:id="@+id/continue_with_ads"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Continue With Ads"
+    android:textColor="#BEB6B6"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.98" />
+</androidx.constraintlayout.widget.ConstraintLayout>

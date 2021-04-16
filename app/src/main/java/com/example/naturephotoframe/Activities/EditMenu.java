@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +32,9 @@ import com.example.naturephotoframe.BackgrounEraser.HoverView;
 import com.example.naturephotoframe.BackgrounEraser.MyCustomView;
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
+import com.example.naturephotoframe.Utils.CheckPurchase;
 import com.example.naturephotoframe.Utils.Common;
+import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +61,8 @@ public class EditMenu extends Activity implements View.OnClickListener {
     int bottombarHeight;
     double bmRatio;
     double viewRatio;
-
+    private FrameLayout adContainerView;
+    private AdView adView;
     Button    positionButton;
     ImageButton eraserMainButton,magicWandMainButton,mirrorButton;
     ImageView eraserSubButton, unEraserSubButton;
@@ -78,14 +82,22 @@ public class EditMenu extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_menu);
         mContentResolver = getContentResolver();
-
+        adContainerView = findViewById(R.id.ad_view_container);
         if (Build.VERSION.SDK_INT >= 23 ) {
             if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
 
+        adContainerView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!CheckPurchase.isPurchase) {
+                    Common.loadBanner(getApplicationContext(),adContainerView,adView);
+                }
 
+            }
+        });
 
         mLayout = (RelativeLayout) findViewById(R.id.mainLayout);
         mDensity = getResources().getDisplayMetrics().density;

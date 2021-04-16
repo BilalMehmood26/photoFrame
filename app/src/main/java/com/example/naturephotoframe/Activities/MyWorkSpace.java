@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -53,7 +54,9 @@ import com.example.naturephotoframe.BackgrounEraser.TryonView;
 import com.example.naturephotoframe.Model.Frames;
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
+import com.example.naturephotoframe.Utils.CheckPurchase;
 import com.example.naturephotoframe.Utils.Common;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 import com.jsibbold.zoomage.ZoomageView;
 import com.zomato.photofilters.FilterPack;
@@ -110,6 +113,8 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     ArrayList<Frames> backgroundList = new ArrayList<>();
     PhotoEditor mPhotoEditor;
     ProgressBar mProgressBar;
+    private FrameLayout adContainerView;
+    private AdView adView;
 
 
     static {
@@ -127,7 +132,15 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
         imagePath = intent.getStringExtra("imagePath");
         headBitmap = getBitmap(imagePath, viewWidth * 2 / 3);
         loadImage();
+        adContainerView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (!CheckPurchase.isPurchase) {
+                    Common.loadBanner(getApplicationContext(),adContainerView,adView);
+                }
 
+            }
+        });
         bgList();
         stickerList();
 
@@ -433,6 +446,7 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     }
 
     public void hooks() {
+        adContainerView = findViewById(R.id.ad_view_container);
         mProgressBar = findViewById(R.id.progreeBar);
         rootLayout = findViewById(R.id.rootLayout);
         saveImage = findViewById(R.id.checked);

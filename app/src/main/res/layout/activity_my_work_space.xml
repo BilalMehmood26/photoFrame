@@ -37,7 +37,23 @@
             android:layout_marginRight="12dp"
             android:src="@drawable/checked" />
     </RelativeLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ad_view"
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Ad is Loading..." />
 
+        <FrameLayout
+            android:id="@+id/ad_view_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.cardview.widget.CardView>
     <!--    <com.jsibbold.zoomage.ZoomageView
             android:id="@+id/image"
             android:layout_width="match_parent"
@@ -56,7 +72,7 @@
         android:id="@+id/rootLayout"
         android:layout_height="match_parent"
         android:layout_above="@+id/horizontalScrollView2"
-        android:layout_below="@+id/toolbar">
+        android:layout_below="@+id/ad_view">
     <ImageView
         android:id="@+id/framesImage"
         android:layout_width="match_parent"
