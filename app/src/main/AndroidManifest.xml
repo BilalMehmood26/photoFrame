@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -18,11 +19,15 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.NaturePhotoFrame">
-        <activity android:name=".Activities.MyWork"></activity>
+        <activity
+            android:name=".Activities.MyWork"
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
         <activity android:name=".Activities.PrivacyPolicy" />
-        <activity android:name=".Activities.EditMenu"
-            android:theme="@style/Theme.Design.NoActionBar."/>
+        <activity
+            android:name=".Activities.EditMenu"
+            android:theme="@style/Theme.Design.NoActionBar." />
         <activity android:name=".Activities.MyWorkSpace" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -38,7 +43,8 @@
                 android:resource="@xml/file_path" />
         </provider>
 
-        <activity android:name=".Activities.Splash"
+        <activity
+            android:name=".Activities.Splash"
             android:theme="@style/Theme.Design.NoActionBar.">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -46,8 +52,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MainActivity"
-             />
+        <activity android:name=".Activities.MainActivity" />
     </application>
 
 </manifest>

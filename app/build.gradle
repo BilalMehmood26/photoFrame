@@ -48,7 +48,12 @@ dependencies {
     implementation 'ja.burhanrashid52:photoeditor:1.1.0'
     implementation 'com.divyanshu.colorseekbar:colorseekbar:1.0.2'
 
+    def billing_version = "3.0.0"
+    implementation "com.android.billingclient:billing:$billing_version"
 
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
+
+    implementation 'com.onesignal:OneSignal:4.2.0'
 
 
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "976862802090",
+    "project_id": "nature-photo-frame-205d3",
+    "storage_bucket": "nature-photo-frame-205d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976862802090:android:7265db67cdbc9c6bdb20d3",
+        "android_client_info": {
+          "package_name": "com.example.naturephotoframe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "976862802090-moj8srcunahme6kofnuhklduf2qbil7g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmXL1Xl_KYycQwZNxP0G1TRdv5x5P2o0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "976862802090-moj8srcunahme6kofnuhklduf2qbil7g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

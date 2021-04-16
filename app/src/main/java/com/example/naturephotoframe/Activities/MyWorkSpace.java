@@ -7,11 +7,18 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.WorkSource;
 import android.text.Layout;
 import android.util.Log;
@@ -26,8 +33,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -44,6 +54,7 @@ import com.example.naturephotoframe.Model.Frames;
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
 import com.example.naturephotoframe.Utils.Common;
+import com.google.android.material.snackbar.Snackbar;
 import com.jsibbold.zoomage.ZoomageView;
 import com.zomato.photofilters.FilterPack;
 import com.zomato.photofilters.imageprocessors.Filter;
@@ -52,10 +63,13 @@ import com.zomato.photofilters.utils.ThumbnailsManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,18 +97,19 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     Bitmap originalImage;
     int viewWidth;
     int viewheight;
-
+    ImageView saveImage;
+    RelativeLayout rootLayout;
     ImageView bodyImageView;
     TryonView mTryOnView;
-    Bitmap filteredImage;
+    Bitmap filteredImage, finalBitmap;
     int localColor = R.color.teal_200;
     Bitmap finalImage;
-    ArrayList<Frames> frameList = new ArrayList<>();
     ArrayList<Frames> stickersList = new ArrayList<>();
     FramesAdapter framesAdapter;
     StickerAdapter stickerAdapter;
     ArrayList<Frames> backgroundList = new ArrayList<>();
     PhotoEditor mPhotoEditor;
+    ProgressBar mProgressBar;
 
 
     static {
@@ -106,17 +121,12 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_work_space);
         hooks();
+        getSupportActionBar().hide();
         mContentResolver = getContentResolver();
         intent = getIntent();
         imagePath = intent.getStringExtra("imagePath");
-        Log.i("headBitmap", "onCreate: " + imagePath);
         headBitmap = getBitmap(imagePath, viewWidth * 2 / 3);
         loadImage();
-
-
-        frameList.add(new Frames(R.drawable.frame1));
-        frameList.add(new Frames(R.drawable.frame13));
-
 
         bgList();
         stickerList();
@@ -154,8 +164,58 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
 
         mPhotoEditor.addImage(Common.cameraBitmap);
 
+        saveImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mProgressBar.setVisibility(View.VISIBLE);
+                saveImage.setEnabled(false);
+                new Handler(Looper.myLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        rootLayout.setDrawingCacheEnabled(true);
+                        finalBitmap =Bitmap.createBitmap(rootLayout.getDrawingCache());
+                        rootLayout.setDrawingCacheEnabled(false);
+                        BitmapUtils.insertImage(getContentResolver(),finalBitmap,"Image","");
+                        saveImage.setEnabled(true);
+                        mProgressBar.setVisibility(View.INVISIBLE);
+                        startActivity(new Intent(getApplicationContext(),MyWork.class));
+                    }
+                },2000);
+            }
+        });
+
     }
 
+    public void save(){
+        String date = new SimpleDateFormat("yyyymmdd_hhmmss", Locale.getDefault()).format(System.currentTimeMillis());
+       String bitmapName = "Image_" + date + ".jpg";
+
+        File myDir = new File(Environment.getExternalStorageDirectory().getPath() + "/Image");
+        File pngfile = new File(myDir, bitmapName);
+        Log.i("myURi", "createPng: " + myDir);
+
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+
+        try {
+
+            FileOutputStream fileOutputStream = new FileOutputStream(pngfile);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+            Toast.makeText(this, "Image Saved " + bitmapName, Toast.LENGTH_SHORT).show();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
     public void showDialog() {
 
         final int[] colorposition = new int[1];
@@ -248,39 +308,52 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     }
 
     public void stickerList() {
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker1));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
-        stickersList.add(new Frames(R.drawable.sticker11));
+        stickersList.add(new Frames(R.drawable.st_one));
+        stickersList.add(new Frames(R.drawable.st_two));
+        stickersList.add(new Frames(R.drawable.st_three));
+        stickersList.add(new Frames(R.drawable.st_four));
+        stickersList.add(new Frames(R.drawable.st_five));
+        stickersList.add(new Frames(R.drawable.st_six));
+        stickersList.add(new Frames(R.drawable.st_seven));
+        stickersList.add(new Frames(R.drawable.st_eight));
+        stickersList.add(new Frames(R.drawable.st_nine));
+        stickersList.add(new Frames(R.drawable.st_ten));
+        stickersList.add(new Frames(R.drawable.st_eleven));
+        stickersList.add(new Frames(R.drawable.st_tweleve));
+        stickersList.add(new Frames(R.drawable.st_thirteen));
+        stickersList.add(new Frames(R.drawable.st_fourteen));
+        stickersList.add(new Frames(R.drawable.st_fifteen));
+        stickersList.add(new Frames(R.drawable.st_sixteen));
+        stickersList.add(new Frames(R.drawable.st_seventeen));
+        stickersList.add(new Frames(R.drawable.st_eighteen));
+        stickersList.add(new Frames(R.drawable.st_ninteen));
+        stickersList.add(new Frames(R.drawable.st_twenty));
+        stickersList.add(new Frames(R.drawable.st_twenty_one));
+        stickersList.add(new Frames(R.drawable.st_twenty_two));
+        stickersList.add(new Frames(R.drawable.st_twenty_three));
+        stickersList.add(new Frames(R.drawable.st_twenty_four));
+        stickersList.add(new Frames(R.drawable.st_twenty_five));
+        stickersList.add(new Frames(R.drawable.st_twenty_six));
+        stickersList.add(new Frames(R.drawable.st_twenty_seven));
+        stickersList.add(new Frames(R.drawable.st_twenty_eight));
+        stickersList.add(new Frames(R.drawable.st_thirty));
+        stickersList.add(new Frames(R.drawable.st_thirty_one));
+        stickersList.add(new Frames(R.drawable.st_thirty_two));
+        stickersList.add(new Frames(R.drawable.st_thirty_three));
+        stickersList.add(new Frames(R.drawable.st_thirty_four));
+        stickersList.add(new Frames(R.drawable.st_thirty_five));
+        stickersList.add(new Frames(R.drawable.st_thirty_five));
+        stickersList.add(new Frames(R.drawable.st_thirty_six));
+        stickersList.add(new Frames(R.drawable.st_thirty_seven));
+        stickersList.add(new Frames(R.drawable.st_thirty_eight));
+        stickersList.add(new Frames(R.drawable.st_thirty_nine));
+        stickersList.add(new Frames(R.drawable.st_fourty));
+        stickersList.add(new Frames(R.drawable.st_fourty_one));
+        stickersList.add(new Frames(R.drawable.st_fourty_two));
+        stickersList.add(new Frames(R.drawable.st_fourty_three));
+        stickersList.add(new Frames(R.drawable.st_fourty_four));
+        stickersList.add(new Frames(R.drawable.st_fourty_five));
+
     }
 
     public void bgList() {
@@ -360,6 +433,9 @@ public class MyWorkSpace extends AppCompatActivity implements FiltersAdapter.Thu
     }
 
     public void hooks() {
+        mProgressBar = findViewById(R.id.progreeBar);
+        rootLayout = findViewById(R.id.rootLayout);
+        saveImage = findViewById(R.id.checked);
         mImage = findViewById(R.id.photoEditorView);
         text = findViewById(R.id.text);
         recyclerView = findViewById(R.id.recyclerView);
