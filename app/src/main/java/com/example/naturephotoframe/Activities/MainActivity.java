@@ -23,17 +23,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.naturephotoframe.R;
 import com.example.naturephotoframe.Utils.BitmapUtils;
-import com.example.naturephotoframe.Utils.CheckPurchase;
 import com.example.naturephotoframe.Utils.Common;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -56,10 +52,9 @@ public class MainActivity extends AppCompatActivity {
     final static int Result_Gallery_Request_Code = 1;
     final static int Result_Camera_Request_Code = 2;
     final int PIC_CROP = 1;
-    private FrameLayout adContainerView;
-    private AdView adView;
+
     String currentPhotoPath;
-ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,21 +63,10 @@ ProgressBar progressBar;
         gallery.setOnClickListener(v -> openGallery());
         camera.setOnClickListener(v -> cameraPermissions());
         myWork.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, MyWork.class)));
-        adContainerView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!CheckPurchase.isPurchase) {
-                    Common.loadBanner(getApplicationContext(),adContainerView,adView);
-                }
-
-            }
-        });
-
 
     }
 
     public void hooks() {
-        adContainerView = findViewById(R.id.ad_view_container);
         camera = findViewById(R.id.camera_btn);
         gallery = findViewById(R.id.gallery);
         myWork = findViewById(R.id.myWork);

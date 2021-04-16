@@ -35,7 +35,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp"
-            android:src="@drawable/checked" />
+            android:src="@drawable/checked"
+            />
     </RelativeLayout>
     <androidx.cardview.widget.CardView
         android:id="@+id/ad_view"
